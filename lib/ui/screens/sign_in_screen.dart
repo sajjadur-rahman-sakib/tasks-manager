@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:sakib/ui/screens/sign_up_screen.dart';
 import 'package:sakib/ui/utility/app_colors.dart';
 import 'package:sakib/ui/widgets/backgroundwidget.dart';
 
@@ -21,12 +22,12 @@ class _SignInScreenState extends State<SignInScreen> {
         child: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(
-                    height: 80,
+                    height: 100,
                   ),
                   Text(
                     'Get Started With',
@@ -37,6 +38,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                   TextFormField(
                     controller: _emailTEController,
+                    keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(hintText: 'Email'),
                   ),
                   const SizedBox(
@@ -63,19 +65,20 @@ class _SignInScreenState extends State<SignInScreen> {
                             child: const Text('Forgot Password?')),
                         RichText(
                           text: TextSpan(
-                              style: TextStyle(
-                                  color: Colors.black.withOpacity(0.8),
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.4),
-                              text: "Don't have an account?",
-                              children: [
-                                TextSpan(
-                                    text: 'Sign up',
-                                    style: const TextStyle(
-                                        color: AppColors.themeColor),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {})
-                              ]),
+                            style: TextStyle(
+                                color: Colors.black.withOpacity(0.8),
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.4),
+                            text: "Don't have an account? ",
+                            children: [
+                              TextSpan(
+                                  text: 'Sign Up',
+                                  style: const TextStyle(
+                                      color: AppColors.themeColor),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = _onTapSignUpButton)
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -85,6 +88,15 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void _onTapSignUpButton() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SignUpScreen(),
       ),
     );
   }

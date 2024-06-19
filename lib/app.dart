@@ -21,23 +21,29 @@ class _MyAppState extends State<MyApp> {
 
   ThemeData lightThemeData() {
     return ThemeData(
-        inputDecorationTheme: InputDecorationTheme(
-            fillColor: Colors.white,
-            filled: true,
-            hintStyle: TextStyle(color: Colors.grey.shade400),
-            border: const OutlineInputBorder(borderSide: BorderSide.none)),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.themeColor,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                foregroundColor: AppColors.white,
-                fixedSize: const Size.fromWidth(double.maxFinite),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)))),
-        textTheme: const TextTheme(
-            titleLarge: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.black)));
+      inputDecorationTheme: InputDecorationTheme(
+          fillColor: Colors.white,
+          filled: true,
+          hintStyle: TextStyle(color: Colors.grey.shade400),
+          border: const OutlineInputBorder(borderSide: BorderSide.none)),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.themeColor,
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              foregroundColor: AppColors.white,
+              fixedSize: const Size.fromWidth(double.maxFinite),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)))),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: Colors.grey,
+          textStyle: const TextStyle(fontWeight: FontWeight.w600),
+        ),
+      ),
+      textTheme: const TextTheme(
+        titleLarge: TextStyle(
+            fontSize: 28, fontWeight: FontWeight.bold, color: Colors.black),
+      ),
+    );
   }
 }
