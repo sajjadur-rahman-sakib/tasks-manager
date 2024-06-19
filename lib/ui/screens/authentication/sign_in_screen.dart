@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sakib/ui/screens/authentication/email_verification_screen.dart';
 import 'package:sakib/ui/screens/authentication/sign_up_screen.dart';
+import 'package:sakib/ui/screens/main_bottom_nav_screen.dart';
 import 'package:sakib/ui/utility/app_colors.dart';
 import 'package:sakib/ui/widgets/backgroundwidget.dart';
 
@@ -53,7 +54,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     height: 16,
                   ),
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: _onTapNextButton,
                       child: const Icon(Icons.arrow_circle_right_outlined)),
                   const SizedBox(
                     height: 36,
@@ -89,6 +90,15 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void _onTapNextButton() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const MainBottomNavScreen(),
       ),
     );
   }
