@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:sakib/ui/screens/sign_up_screen.dart';
+import 'package:sakib/ui/screens/authentication/email_verification_screen.dart';
+import 'package:sakib/ui/screens/authentication/sign_up_screen.dart';
 import 'package:sakib/ui/utility/app_colors.dart';
 import 'package:sakib/ui/widgets/backgroundwidget.dart';
 
@@ -61,7 +62,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     child: Column(
                       children: [
                         TextButton(
-                            onPressed: () {},
+                            onPressed: _onTapForgotPasswordButton,
                             child: const Text('Forgot Password?')),
                         RichText(
                           text: TextSpan(
@@ -97,6 +98,15 @@ class _SignInScreenState extends State<SignInScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => const SignUpScreen(),
+      ),
+    );
+  }
+
+  void _onTapForgotPasswordButton() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const EmailVerificationScreen(),
       ),
     );
   }

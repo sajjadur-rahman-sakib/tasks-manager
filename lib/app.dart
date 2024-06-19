@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sakib/ui/screens/splash_screen.dart';
+import 'package:sakib/ui/screens/authentication/splash_screen.dart';
 import 'package:sakib/ui/utility/app_colors.dart';
 
 class MyApp extends StatefulWidget {
@@ -42,7 +42,16 @@ class _MyAppState extends State<MyApp> {
       ),
       textTheme: const TextTheme(
         titleLarge: TextStyle(
-            fontSize: 28, fontWeight: FontWeight.bold, color: Colors.black),
+          fontSize: 28,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+        titleSmall: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: Colors.grey,
+          letterSpacing: 0.4,
+        ),
       ),
     );
   }

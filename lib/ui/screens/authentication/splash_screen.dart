@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:sakib/ui/screens/sign_in_screen.dart';
+import 'package:sakib/ui/screens/authentication/sign_in_screen.dart';
 import 'package:sakib/ui/utility/asset_paths.dart';
 import 'package:sakib/ui/widgets/backgroundwidget.dart';
 
