@@ -17,10 +17,9 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: profileAppBar(),
+      appBar: profileAppBar(context),
       body: BackgroundWidget(
         child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -42,7 +41,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {},
-                  child: const Text('Add'),
+                  child: const Icon(Icons.arrow_circle_right_outlined),
                 )
               ],
             ),
