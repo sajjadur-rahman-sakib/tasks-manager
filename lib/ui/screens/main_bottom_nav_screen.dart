@@ -4,6 +4,7 @@ import 'package:sakib/ui/screens/completed_task_screen.dart';
 import 'package:sakib/ui/screens/new_task_screen.dart';
 import 'package:sakib/ui/screens/progress_task_screen.dart';
 import 'package:sakib/ui/utility/app_colors.dart';
+import 'package:sakib/ui/widgets/profile_app_bar.dart';
 
 class MainBottomNavScreen extends StatefulWidget {
   const MainBottomNavScreen({super.key});
@@ -24,6 +25,7 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: profileAppBar(),
       body: _screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,

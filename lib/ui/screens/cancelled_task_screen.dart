@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sakib/ui/widgets/task_item.dart';
 
 class CancelledTaskScreen extends StatefulWidget {
   const CancelledTaskScreen({super.key});
@@ -10,6 +11,13 @@ class CancelledTaskScreen extends StatefulWidget {
 class _CancelledTaskScreenState extends State<CancelledTaskScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      body: ListView.builder(
+        itemCount: 5,
+        itemBuilder: (context, index) {
+          return const TaskItem();
+        },
+      ),
+    );
   }
 }

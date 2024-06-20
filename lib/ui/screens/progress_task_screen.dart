@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sakib/ui/widgets/task_item.dart';
 
 class ProgressTaskScreen extends StatefulWidget {
   const ProgressTaskScreen({super.key});
@@ -10,6 +11,13 @@ class ProgressTaskScreen extends StatefulWidget {
 class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      body: ListView.builder(
+        itemCount: 5,
+        itemBuilder: (context, index) {
+          return const TaskItem();
+        },
+      ),
+    );
   }
 }
