@@ -1,8 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:sakib/data/models/network_response.dart';
+import 'package:sakib/data/network_caller/network_caller.dart';
+import 'package:sakib/data/utilities/urls.dart';
 import 'package:sakib/ui/utility/app_colors.dart';
 import 'package:sakib/ui/utility/app_constants.dart';
 import 'package:sakib/ui/widgets/backgroundwidget.dart';
+import 'package:sakib/ui/widgets/snack_bar_message.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -19,6 +24,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _mobileTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _showPassword = false;
+  bool _registrationInProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -133,13 +139,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     const SizedBox(
                       height: 16,
                     ),
-                    ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            //API sign up
-                          }
-                        },
-                        child: const Icon(Icons.arrow_circle_right_outlined)),
+                    Visibility(
+                      visible: _registrationInProgress == false,
+                      replacement: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      child: ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _registerUser();
+                            }
+                          },
+                          child: const Icon(Icons.arrow_circle_right_outlined)),
+                    ),
                     const SizedBox(
                       height: 36,
                     ),
@@ -167,7 +179,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             TextSpan(
               text: 'Sign In',
               style: const TextStyle(color: AppColors.themeColor),
-              recognizer: TapGestureRecognizer()..onTap = _backToSignIn,
+              recognizer: TapGestureRecognizer()..onTap = _onTapSignInButton,
             )
           ],
         ),
@@ -175,7 +187,53 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  void _backToSignIn() {
+  Future<void> _registerUser() async {
+    _registrationInProgress = true;
+
+    if (mounted) {
+      setState(() {});
+    }
+
+    Map<String, dynamic> requestInput = {
+      "email": _emailTEController.text.trim(),
+      "firstName": _firstNameTEController.text.trim(),
+      "lastName": _lastNameTEController.text.trim(),
+      "mobile": _mobileTEController.text.trim(),
+      "password": _passwordTEController.text,
+      "photo": ""
+    };
+
+    NetworkResponse response =
+        await NetworkCaller.postRequest(Urls.registration, body: requestInput);
+
+    _registrationInProgress = false;
+
+    if (mounted) {
+      setState(() {});
+    }
+
+    if (response.isSuccess) {
+      _clearTextFields();
+      if (mounted) {
+        showSnackBarMessage(context, 'Registration Success');
+      }
+    } else {
+      if (mounted) {
+        showSnackBarMessage(context,
+            response.errorMessage ?? 'Registration failed! try again.');
+      }
+    }
+  }
+
+  void _clearTextFields() {
+    _emailTEController.clear();
+    _firstNameTEController.clear();
+    _lastNameTEController.clear();
+    _passwordTEController.clear();
+    _mobileTEController.clear();
+  }
+
+  void _onTapSignInButton() {
     Navigator.pop(context);
   }
 
