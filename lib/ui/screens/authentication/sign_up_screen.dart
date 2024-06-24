@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sakib/data/models/network_response.dart';
@@ -102,10 +101,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         if (value?.trim().isEmpty ?? true) {
                           return 'Enter your mobile';
                         }
-                        // if (AppConstants.mobileRegExp.hasMatch(value!) ==
-                        //     false) {
-                        //   return 'Enter a valid phone number';
-                        // }
                         return null;
                       },
                     ),
@@ -155,7 +150,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     const SizedBox(
                       height: 36,
                     ),
-                    _buildBackToSignInSection()
+                    _buildBackToSignInSection(),
                   ],
                 ),
               ),
