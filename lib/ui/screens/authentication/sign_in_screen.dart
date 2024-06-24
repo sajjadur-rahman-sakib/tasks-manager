@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sakib/data/models/login_model.dart';
@@ -176,18 +175,22 @@ class _SignInScreenState extends State<SignInScreen> {
 
       await AuthController.saveUserAccessToken(loginModel.token!);
       await AuthController.saveUserData(loginModel.userModel!);
-      
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const MainBottomNavScreen(),
-        ),
-      );
-    } else {
-      showSnackBarMessage(
+
+      if (mounted) {
+        Navigator.pushReplacement(
           context,
-          response.errorMessage ??
-              'Email or Password is not correct. Try again.');
+          MaterialPageRoute(
+            builder: (context) => const MainBottomNavScreen(),
+          ),
+        );
+      }
+    } else {
+      if (mounted) {
+        showSnackBarMessage(
+            context,
+            response.errorMessage ??
+                'Email or Password is not correct. Try again.');
+      }
     }
   }
 

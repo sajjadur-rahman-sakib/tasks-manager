@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:sakib/data/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,12 +28,25 @@ class AuthController {
   static Future<UserModel?> getUserData() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String? data = sharedPreferences.getString(_userDataKey);
-
-    if(data == null) {
-      return null;
-    }
+    if (data == null) return null;
 
     UserModel userModel = UserModel.fromJson(jsonDecode(data));
     return userModel;
+  }
+
+  static Future<void> clearAllData() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    await sharedPreferences.clear();
+  }
+
+  static Future<bool> checkAuthState() async {
+    String? token = await getUserAccessToken();
+
+    if (token == null) return false;
+
+    accessToken = token;
+    userData = await getUserData();
+
+    return true;
   }
 }
