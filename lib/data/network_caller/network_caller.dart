@@ -7,9 +7,12 @@ import 'package:sakib/ui/controllers/auth_controller.dart';
 class NetworkCaller {
   static Future<NetworkResponse> getRequest(String url) async {
     try {
+      debugPrint(url);
       Response response = await get(Uri.parse(url), headers: {
         'token': AuthController.accessToken,
       });
+      debugPrint(response.statusCode.toString());
+      debugPrint(response.body);
       if (response.statusCode == 200) {
         final decodedData = jsonDecode(response.body);
         return NetworkResponse(
