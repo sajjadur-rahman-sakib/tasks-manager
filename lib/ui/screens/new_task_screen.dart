@@ -58,6 +58,10 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                     itemBuilder: (context, index) {
                       return TaskItem(
                         taskModel: newTaskList[index],
+                        onUpdateTask: () {
+                          _getNewTasks();
+                          _getTaskCountByStatus();
+                        },
                       );
                     },
                   ),
@@ -88,10 +92,8 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   Widget _buildSummarySection() {
     return Visibility(
       visible: _getTaskCountByStatusInProgress == false,
-      replacement: SizedBox(
-        height: 10,
-        child: CircularProgressIndicator(),
-      ),
+      replacement: const CenteredProgressIndicator(),
+
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
