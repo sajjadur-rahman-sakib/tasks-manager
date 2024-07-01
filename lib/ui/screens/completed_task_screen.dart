@@ -64,8 +64,8 @@ class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
       completedTasks = taskListWrapperModel.taskList ?? [];
     } else {
       if (mounted) {
-        showSnackBarMessage(
-            context, response.errorMessage ?? 'Get new task failed! Try again');
+        showSnackBarMessage(context,
+            response.errorMessage ?? 'Get completed task failed! Try again');
       }
     }
 

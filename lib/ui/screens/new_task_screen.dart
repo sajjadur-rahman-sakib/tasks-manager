@@ -93,7 +93,6 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     return Visibility(
       visible: _getTaskCountByStatusInProgress == false,
       replacement: const CenteredProgressIndicator(),
-
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(

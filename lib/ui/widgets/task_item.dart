@@ -22,7 +22,7 @@ class TaskItem extends StatefulWidget {
 
 class _TaskItemState extends State<TaskItem> {
   bool _deleteInProgress = false;
-  bool _editInProgress = false;
+  final bool _editInProgress = false;
   String dropdownValue = '';
   List<String> statusList = [
     'New',
