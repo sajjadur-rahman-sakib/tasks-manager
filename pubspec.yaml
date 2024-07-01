@@ -20,6 +20,7 @@ dependencies:
   pin_code_fields: ^8.0.1
   cached_network_image: ^3.3.1
   shared_preferences: ^2.2.3
+  image_picker: ^1.1.2
 
 
 dev_dependencies:
