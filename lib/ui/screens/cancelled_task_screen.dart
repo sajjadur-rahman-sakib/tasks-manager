@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sakib/ui/widgets/task_item.dart';
 
 class CancelledTaskScreen extends StatefulWidget {
   const CancelledTaskScreen({super.key});

@@ -1,8 +1,10 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:sakib/app.dart';
 import 'package:sakib/data/models/network_response.dart';
 import 'package:sakib/ui/controllers/auth_controller.dart';
+import 'package:sakib/ui/screens/authentication/sign_in_screen.dart';
 
 class NetworkCaller {
   static Future<NetworkResponse> getRequest(String url) async {
@@ -19,6 +21,12 @@ class NetworkCaller {
           statusCode: response.statusCode,
           isSuccess: true,
           responseData: decodedData,
+        );
+      } else if (response.statusCode == 401) {
+        redirectToLogin();
+        return NetworkResponse(
+          statusCode: response.statusCode,
+          isSuccess: false,
         );
       } else {
         return NetworkResponse(
@@ -59,6 +67,12 @@ class NetworkCaller {
           isSuccess: true,
           responseData: decodedData,
         );
+      } else if (response.statusCode == 401) {
+        redirectToLogin();
+        return NetworkResponse(
+          statusCode: response.statusCode,
+          isSuccess: false,
+        );
       } else {
         return NetworkResponse(
           statusCode: response.statusCode,
@@ -72,5 +86,16 @@ class NetworkCaller {
         errorMessage: e.toString(),
       );
     }
+  }
+
+  static Future<void> redirectToLogin() async {
+    await AuthController.clearAllData();
+    Navigator.pushAndRemoveUntil(
+      MyApp.navigatorKey.currentContext!,
+      MaterialPageRoute(
+        builder: (context) => const SignInScreen(),
+      ),
+      (route) => false,
+    );
   }
 }

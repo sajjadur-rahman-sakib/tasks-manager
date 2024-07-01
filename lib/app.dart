@@ -5,6 +5,8 @@ import 'package:sakib/ui/utility/app_colors.dart';
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -13,6 +15,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: MyApp.navigatorKey,
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),
       theme: lightThemeData(),
