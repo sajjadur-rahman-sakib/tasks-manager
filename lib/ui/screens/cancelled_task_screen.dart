@@ -33,16 +33,19 @@ class _CancelledTaskScreenState extends State<CancelledTaskScreen> {
         child: Visibility(
           visible: _getCancelledTasksInProgress == false,
           replacement: const CenteredProgressIndicator(),
-          child: ListView.builder(
-            itemCount: cancelledTasks.length,
-            itemBuilder: (context, index) {
-              return TaskItem(
-                taskModel: cancelledTasks[index],
-                onUpdateTask: () {
-                  _getCompletedTasks();
-                },
-              );
-            },
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: ListView.builder(
+              itemCount: cancelledTasks.length,
+              itemBuilder: (context, index) {
+                return TaskItem(
+                  taskModel: cancelledTasks[index],
+                  onUpdateTask: () {
+                    _getCompletedTasks();
+                  },
+                );
+              },
+            ),
           ),
         ),
       ),

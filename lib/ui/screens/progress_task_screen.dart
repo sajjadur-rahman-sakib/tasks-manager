@@ -33,16 +33,19 @@ class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
         child: Visibility(
           visible: _getProgressTasksInProgress == false,
           replacement: const CenteredProgressIndicator(),
-          child: ListView.builder(
-            itemCount: progressTasks.length,
-            itemBuilder: (context, index) {
-              return TaskItem(
-                taskModel: progressTasks[index],
-                onUpdateTask: () {
-                  _getProgressTasks();
-                },
-              );
-            },
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: ListView.builder(
+              itemCount: progressTasks.length,
+              itemBuilder: (context, index) {
+                return TaskItem(
+                  taskModel: progressTasks[index],
+                  onUpdateTask: () {
+                    _getProgressTasks();
+                  },
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -56,11 +59,11 @@ class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
     }
 
     NetworkResponse response =
-        await NetworkCaller.getRequest(Urls.progressTasks);
+    await NetworkCaller.getRequest(Urls.progressTasks);
 
     if (response.isSuccess) {
       TaskListWrapperModel taskListWrapperModel =
-          TaskListWrapperModel.fromJson(response.responseData);
+      TaskListWrapperModel.fromJson(response.responseData);
       progressTasks = taskListWrapperModel.taskList ?? [];
     } else {
       if (mounted) {
