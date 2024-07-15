@@ -1,17 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:sakib/data/models/login_model.dart';
-import 'package:sakib/data/models/network_response.dart';
-import 'package:sakib/data/network_caller/network_caller.dart';
-import 'package:sakib/data/utilities/urls.dart';
-import 'package:sakib/ui/controllers/auth_controller.dart';
-import 'package:sakib/ui/screens/authentication/email_verification_screen.dart';
-import 'package:sakib/ui/screens/authentication/sign_up_screen.dart';
-import 'package:sakib/ui/screens/main_bottom_nav_screen.dart';
-import 'package:sakib/ui/utility/app_colors.dart';
-import 'package:sakib/ui/utility/app_constants.dart';
-import 'package:sakib/ui/widgets/backgroundwidget.dart';
-import 'package:sakib/ui/widgets/snack_bar_message.dart';
+import 'package:get/get.dart';
+import '../../controllers/sign_in_controller.dart';
+import '../../utility/app_colors.dart';
+import '../../utility/app_constants.dart';
+import '../../widgets/backgroundwidget.dart';
+import '../../widgets/centered_progress_indicator.dart';
+import '../../widgets/snack_bar_message.dart';
+import '../main_bottom_nav_screen.dart';
+import 'email_verification_screen.dart';
+import 'sign_up_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -24,12 +22,11 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _showPassword = false;
-  bool _signInApiInProgress = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: BackgroundWidget(
         child: SafeArea(
           child: SingleChildScrollView(
@@ -40,16 +37,12 @@ class _SignInScreenState extends State<SignInScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      height: 100,
-                    ),
+                    const SizedBox(height: 100),
                     Text(
                       'Get Started With',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    const SizedBox(
-                      height: 24,
-                    ),
+                    const SizedBox(height: 24),
                     TextFormField(
                       controller: _emailTEController,
                       keyboardType: TextInputType.emailAddress,
@@ -57,7 +50,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: (String? value) {
                         if (value?.trim().isEmpty ?? true) {
-                          return 'Enter your email';
+                          return 'Enter your email address';
                         }
                         if (AppConstants.emailRegExp.hasMatch(value!) ==
                             false) {
@@ -66,26 +59,12 @@ class _SignInScreenState extends State<SignInScreen> {
                         return null;
                       },
                     ),
-                    const SizedBox(
-                      height: 8,
-                    ),
+                    const SizedBox(height: 8),
                     TextFormField(
-                      obscureText: _showPassword == false,
+                      obscureText: true,
                       controller: _passwordTEController,
-                      decoration: InputDecoration(
-                        hintText: 'Password',
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            _showPassword = !_showPassword;
-                            if (mounted) {
-                              setState(() {});
-                            }
-                          },
-                          icon: Icon(_showPassword
-                              ? Icons.visibility
-                              : Icons.visibility_off),
-                        ),
-                      ),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      decoration: const InputDecoration(hintText: 'Password'),
                       validator: (String? value) {
                         if (value?.trim().isEmpty ?? true) {
                           return 'Enter your password';
@@ -93,42 +72,45 @@ class _SignInScreenState extends State<SignInScreen> {
                         return null;
                       },
                     ),
-                    const SizedBox(
-                      height: 16,
+                    const SizedBox(height: 16),
+                    GetBuilder<SignInController>(
+                      builder: (signInController) {
+                        return Visibility(
+                          visible:
+                              signInController.signInApiInProgress == false,
+                          replacement: const CenteredProgressIndicator(),
+                          child: ElevatedButton(
+                            onPressed: _onTapNextButton,
+                            child:
+                                const Icon(Icons.arrow_circle_right_outlined),
+                          ),
+                        );
+                      },
                     ),
-                    Visibility(
-                      visible: _signInApiInProgress == false,
-                      replacement: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      child: ElevatedButton(
-                        onPressed: _onTapNextButton,
-                        child: const Icon(Icons.arrow_circle_right_outlined),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 36,
-                    ),
+                    const SizedBox(height: 36),
                     Center(
                       child: Column(
                         children: [
                           TextButton(
-                              onPressed: _onTapForgotPasswordButton,
-                              child: const Text('Forgot Password?')),
+                            onPressed: _onTapForgotPasswordButton,
+                            child: const Text('Forgot Password?'),
+                          ),
                           RichText(
                             text: TextSpan(
                               style: TextStyle(
-                                  color: Colors.black.withOpacity(0.8),
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.4),
+                                color: Colors.black.withOpacity(0.8),
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.4,
+                              ),
                               text: "Don't have an account? ",
                               children: [
                                 TextSpan(
-                                    text: 'Sign Up',
-                                    style: const TextStyle(
-                                        color: AppColors.themeColor),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = _onTapSignUpButton)
+                                  text: 'Sign up',
+                                  style: const TextStyle(
+                                      color: AppColors.themeColor),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = _onTapSignUpButton,
+                                )
                               ],
                             ),
                           ),
@@ -145,51 +127,19 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  void _onTapNextButton() {
+  Future<void> _onTapNextButton() async {
     if (_formKey.currentState!.validate()) {
-      _signUp();
-    }
-  }
-
-  Future<void> _signUp() async {
-    _signInApiInProgress = true;
-    if (mounted) {
-      setState(() {});
-    }
-
-    Map<String, dynamic> requestData = {
-      'email': _emailTEController.text.trim(),
-      'password': _passwordTEController.text,
-    };
-
-    final NetworkResponse response =
-        await NetworkCaller.postRequest(Urls.login, body: requestData);
-
-    _signInApiInProgress = false;
-    if (mounted) {
-      setState(() {});
-    }
-
-    if (response.isSuccess) {
-      LoginModel loginModel = LoginModel.fromJson(response.responseData);
-
-      await AuthController.saveUserAccessToken(loginModel.token!);
-      await AuthController.saveUserData(loginModel.userModel!);
-
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const MainBottomNavScreen(),
-          ),
-        );
-      }
-    } else {
-      if (mounted) {
-        showSnackBarMessage(
-            context,
-            response.errorMessage ??
-                'Email or Password is not correct. Try again.');
+      final SignInController signInController = Get.find<SignInController>();
+      final bool result = await signInController.signIn(
+        _emailTEController.text.trim(),
+        _passwordTEController.text,
+      );
+      if (result) {
+        Get.offAll(() => const MainBottomNavScreen());
+      } else {
+        if (mounted) {
+          showSnackBarMessage(context, signInController.errorMessage);
+        }
       }
     }
   }

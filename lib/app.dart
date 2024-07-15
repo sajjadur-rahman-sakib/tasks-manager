@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:sakib/controller_binder.dart';
 import 'package:sakib/ui/screens/authentication/splash_screen.dart';
 import 'package:sakib/ui/utility/app_colors.dart';
 
@@ -14,11 +16,12 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       navigatorKey: MyApp.navigatorKey,
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),
       theme: lightThemeData(),
+      initialBinding: ControllerBinder(),
     );
   }
 
