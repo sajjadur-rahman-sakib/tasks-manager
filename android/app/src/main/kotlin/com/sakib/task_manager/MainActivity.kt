@@ -1,4 +1,4 @@
-package com.sakib.sakib
+package com.sakib.task_manager
 
 import io.flutter.embedding.android.FlutterActivity
 

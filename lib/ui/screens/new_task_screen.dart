@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:sakib/data/models/network_response.dart';
-import 'package:sakib/data/models/task_by_status_count_wrapper_model.dart';
-import 'package:sakib/data/models/task_count_by_status_model.dart';
-import 'package:sakib/data/models/task_list_wrapper_model.dart';
-import 'package:sakib/data/models/task_model.dart';
-import 'package:sakib/data/network_caller/network_caller.dart';
-import 'package:sakib/data/utilities/urls.dart';
-import 'package:sakib/ui/screens/add_new_task_screen.dart';
-import 'package:sakib/ui/utility/app_colors.dart';
-import 'package:sakib/ui/widgets/centered_progress_indicator.dart';
-import 'package:sakib/ui/widgets/snack_bar_message.dart';
-import 'package:sakib/ui/widgets/task_item.dart';
-import 'package:sakib/ui/widgets/task_summary_card.dart';
+import 'package:get/get.dart';
+import '../../data/models/network_response.dart';
+import '../../data/models/task_by_status_count_wrapper_model.dart';
+import '../../data/models/task_count_by_status_model.dart';
+import '../../data/network_caller/network_caller.dart';
+import '../../data/utilities/urls.dart';
+import '../controllers/new_task_controller.dart';
+import '../utility/app_colors.dart';
+import '../widgets/centered_progress_indicator.dart';
+import '../widgets/snack_bar_message.dart';
+import '../widgets/task_item.dart';
+import '../widgets/task_summary_card.dart';
+import 'add_new_task_screen.dart';
 
 class NewTaskScreen extends StatefulWidget {
   const NewTaskScreen({super.key});
@@ -21,16 +21,18 @@ class NewTaskScreen extends StatefulWidget {
 }
 
 class _NewTaskScreenState extends State<NewTaskScreen> {
-  bool _getNewTasksInProgress = false;
   bool _getTaskCountByStatusInProgress = false;
-  List<TaskModel> newTaskList = [];
   List<TaskCountByStatusModel> taskCountByStatusList = [];
 
   @override
   void initState() {
     super.initState();
+    _initialCall();
+  }
+
+  void _initialCall() {
     _getTaskCountByStatus();
-    _getNewTasks();
+    Get.find<NewTaskController>().getNewTasks();
   }
 
   @override
@@ -39,37 +41,33 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
       body: Padding(
         padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSummarySection(),
-            const SizedBox(
-              height: 8,
-            ),
+            const SizedBox(height: 8),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () async {
-                  _getNewTasks();
-                  _getTaskCountByStatus();
+                  _initialCall();
                 },
-                child: Visibility(
-                  visible: _getNewTasksInProgress == false,
-                  replacement: const CenteredProgressIndicator(),
-                  child: ListView.builder(
-                    itemCount: newTaskList.length,
-                    itemBuilder: (context, index) {
-                      return TaskItem(
-                        taskModel: newTaskList[index],
-                        onUpdateTask: () {
-                          _getNewTasks();
-                          _getTaskCountByStatus();
-                        },
-                      );
-                    },
-                  ),
-                ),
+                child:
+                    GetBuilder<NewTaskController>(builder: (newTaskController) {
+                  return Visibility(
+                    visible: newTaskController.getNewTasksInProgress == false,
+                    replacement: const CenteredProgressIndicator(),
+                    child: ListView.builder(
+                      itemCount: newTaskController.newTaskList.length,
+                      itemBuilder: (context, index) {
+                        return TaskItem(
+                          taskModel: newTaskController.newTaskList[index],
+                          onUpdateTask: _initialCall,
+                        );
+                      },
+                    ),
+                  );
+                }),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -94,7 +92,10 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   Widget _buildSummarySection() {
     return Visibility(
       visible: _getTaskCountByStatusInProgress == false,
-      replacement: const CenteredProgressIndicator(),
+      replacement: const SizedBox(
+        height: 100,
+        child: CenteredProgressIndicator(),
+      ),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -107,31 +108,6 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
         ),
       ),
     );
-  }
-
-  Future<void> _getNewTasks() async {
-    _getNewTasksInProgress = true;
-    if (mounted) {
-      setState(() {});
-    }
-
-    NetworkResponse response = await NetworkCaller.getRequest(Urls.newTasks);
-
-    if (response.isSuccess) {
-      TaskListWrapperModel taskListWrapperModel =
-          TaskListWrapperModel.fromJson(response.responseData);
-      newTaskList = taskListWrapperModel.taskList ?? [];
-    } else {
-      if (mounted) {
-        showSnackBarMessage(
-            context, response.errorMessage ?? 'Get new task failed! Try again');
-      }
-    }
-
-    _getNewTasksInProgress = false;
-    if (mounted) {
-      setState(() {});
-    }
   }
 
   Future<void> _getTaskCountByStatus() async {
