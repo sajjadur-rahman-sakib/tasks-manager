@@ -50,22 +50,23 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                 onRefresh: () async {
                   _initialCall();
                 },
-                child:
-                    GetBuilder<NewTaskController>(builder: (newTaskController) {
-                  return Visibility(
-                    visible: newTaskController.getNewTasksInProgress == false,
-                    replacement: const CenteredProgressIndicator(),
-                    child: ListView.builder(
-                      itemCount: newTaskController.newTaskList.length,
-                      itemBuilder: (context, index) {
-                        return TaskItem(
-                          taskModel: newTaskController.newTaskList[index],
-                          onUpdateTask: _initialCall,
-                        );
-                      },
-                    ),
-                  );
-                }),
+                child: GetBuilder<NewTaskController>(
+                  builder: (newTaskController) {
+                    return Visibility(
+                      visible: newTaskController.getNewTasksInProgress == false,
+                      replacement: const CenteredProgressIndicator(),
+                      child: ListView.builder(
+                        itemCount: newTaskController.newTaskList.length,
+                        itemBuilder: (context, index) {
+                          return TaskItem(
+                            taskModel: newTaskController.newTaskList[index],
+                            onUpdateTask: _initialCall,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ],

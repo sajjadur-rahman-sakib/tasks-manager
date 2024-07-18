@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sakib/data/models/network_response.dart';
-import 'package:sakib/data/models/task_list_wrapper_model.dart';
-import 'package:sakib/data/models/task_model.dart';
-import 'package:sakib/data/network_caller/network_caller.dart';
-import 'package:sakib/data/utilities/urls.dart';
+import 'package:get/get.dart';
 import 'package:sakib/ui/widgets/centered_progress_indicator.dart';
-import 'package:sakib/ui/widgets/snack_bar_message.dart';
 import 'package:sakib/ui/widgets/task_item.dart';
+
+import '../controllers/completed_task_controller.dart';
 
 class CompletedTaskScreen extends StatefulWidget {
   const CompletedTaskScreen({super.key});
@@ -16,65 +13,46 @@ class CompletedTaskScreen extends StatefulWidget {
 }
 
 class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
-  bool _getCompletedTasksInProgress = false;
-  List<TaskModel> completedTasks = [];
-
   @override
   void initState() {
     super.initState();
-    _getCompletedTasks();
+    _initialCall();
+  }
+
+  void _initialCall() {
+    Get.find<CompletedTaskController>().getCompletedTasks();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: () async => _getCompletedTasks(),
-        child: Visibility(
-          visible: _getCompletedTasksInProgress == false,
-          replacement: const CenteredProgressIndicator(),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: ListView.builder(
-              itemCount: completedTasks.length,
-              itemBuilder: (context, index) {
-                return TaskItem(
-                  taskModel: completedTasks[index],
-                  onUpdateTask: () {
-                    _getCompletedTasks();
+        onRefresh: () async => _initialCall(),
+        child: GetBuilder<CompletedTaskController>(
+          builder: (completedTaskController) {
+            return Visibility(
+              visible:
+                  completedTaskController.getCompletedTasksInProgress == false,
+              replacement: const CenteredProgressIndicator(),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: ListView.builder(
+                  itemCount: completedTaskController.completedTaskList.length,
+                  itemBuilder: (context, index) {
+                    return TaskItem(
+                      taskModel:
+                          completedTaskController.completedTaskList[index],
+                      onUpdateTask: () {
+                        _initialCall();
+                      },
+                    );
                   },
-                );
-              },
-            ),
-          ),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
-  }
-
-  Future<void> _getCompletedTasks() async {
-    _getCompletedTasksInProgress = true;
-    if (mounted) {
-      setState(() {});
-    }
-
-    NetworkResponse response =
-        await NetworkCaller.getRequest(Urls.completedTasks);
-
-    if (response.isSuccess) {
-      TaskListWrapperModel taskListWrapperModel =
-          TaskListWrapperModel.fromJson(response.responseData);
-      completedTasks = taskListWrapperModel.taskList ?? [];
-    } else {
-      if (mounted) {
-        showSnackBarMessage(context,
-            response.errorMessage ?? 'Get completed task failed! Try again');
-      }
-    }
-
-    _getCompletedTasksInProgress = false;
-    if (mounted) {
-      setState(() {});
-    }
   }
 }
